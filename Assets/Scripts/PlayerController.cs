@@ -4,27 +4,42 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Rigidbody playerRigid;
+    Rigidbody playerRigid;
     public GameObject player;
     public float speed;
-    public float maxSpeed;
+    public float jumpPower;
     public float moveHorizontal;
     public float moveVertical;
+    public float moveUp;
     public Vector3 movement;
-    public Vector3 playerVector3;
 
     void Start() {
-
+        playerRigid = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate() {
+        Move();
+    }
+    void Update()
+    {
+        Jump();
+    }
 
-        moveHorizontal = Input.GetAxisRaw("Horizontal");
-        moveVertical = Input.GetAxisRaw("Vertical");
+    void Move() {
+        moveHorizontal = Input.GetAxis("Horizontal");
+        moveVertical = Input.GetAxis("Vertical");
 
         movement = new Vector3(moveHorizontal, 0, moveVertical);
 
-        playerRigid.AddForce(movement*speed);
+        //playerRigid.AddForce(movement * speed, ForceMode.Acceleration);
+        playerRigid.velocity = movement * speed;
+    }
 
+    void Jump() {
+        moveUp = Input.GetAxis("Jump");
+
+        movement = new Vector3(moveHorizontal, moveUp, moveVertical);
+
+        playerRigid.AddForce(jumpPower * movement, ForceMode.Acceleration);
     }
 }
