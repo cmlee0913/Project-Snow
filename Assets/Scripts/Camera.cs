@@ -5,8 +5,11 @@ using UnityEngine;
 public class Camera : MonoBehaviour
 {
     GameObject player;
-    public Vector3 cameraVec;
-    public Vector3 playerVec;
+    public Vector3 cameraPos;
+    public Vector3 playerPos;
+    public float mouseHorizontal;
+    public float mouseVertical;
+    public float angle;
 
     //public float mx;
     //public float my;
@@ -20,50 +23,64 @@ public class Camera : MonoBehaviour
     }
 
     void Update() {
+        //transform.LookAt(playerPos);
         Lookat();
+        Rotate();
     }
-    public void Lookat ()
+    public void Lookat()
     {
-        cameraVec = transform.position;
-        playerVec = player.transform.position;
+        cameraPos = transform.position;
+        playerPos = player.transform.position;
 
-        if (cameraVec.x != playerVec.x)
-        {
-            cameraVec.x = playerVec.x;
-        }
-
-        if (cameraVec.y - playerVec.y != 2.5)
-        {
-            cameraVec.y = playerVec.y + 1.5f;
-        }
-
-        if (cameraVec.z - playerVec.z != -3.2)
-        {
-            cameraVec.z = playerVec.z - 3.2f;
-        }
-
-        transform.position = cameraVec;
-    }
-    void Mouses()
-    {
-        //mouseHorizontal = Input.GetAxis("Mouse X");
-        //mouseVertical = Input.GetAxis("Mouse Y");
-        //camTransform.LookAt(playerTransform);
-
-        //mx += mouseHorizontal * rotSpeed * Time.deltaTime;
-        //my += mouseVertical * rotSpeed * Time.deltaTime;
-
-        //if (my >= 90)
+        //if (cameraPos.x != playerPos.x)
         //{
-        //    my = 90;
-        //}
-        //else if (my <= -90)
-        //
-        //    my = -90;
+        //    cameraPos.x = playerPos.x;
         //}
 
-        //my = Mathf.Clamp(my, -90, 90);
+        if (cameraPos.y - playerPos.y != 2.5)
+        {
+            cameraPos.y = playerPos.y + 1.5f;
+        }
 
-        //camTransform.eulerAngles = new Vector3(-my, mx, 0);
+        //if (cameraPos.z - playerPos.z != -3.2)
+        //{
+        //    cameraPos.z = playerPos.z - 3.2f;
+        //}
+
+        transform.position = cameraPos;
     }
+
+    void Rotate() {
+        mouseHorizontal = Input.GetAxis("Mouse X");
+        mouseVertical = Input.GetAxis("Mouse Y");
+
+        if (Input.GetMouseButton(1)) {
+            transform.RotateAround(playerPos,
+                               new Vector3(0, mouseHorizontal*3, 0),
+                               angle);
+        }
+    }
+
+    //void Mouses()
+    //{
+    //mouseHorizontal = Input.GetAxis("Mouse X");
+    //mouseVertical = Input.GetAxis("Mouse Y");
+    //camTransform.LookAt(playerTransform);
+
+    //mx += mouseHorizontal * rotSpeed * Time.deltaTime;
+    //my += mouseVertical * rotSpeed * Time.deltaTime;
+
+    //if (my >= 90)
+    //{
+    //    my = 90;
+    //}
+    //else if (my <= -90)
+    //
+    //    my = -90;
+    //}
+
+    //my = Mathf.Clamp(my, -90, 90);
+
+    //camTransform.eulerAngles = new Vector3(-my, mx, 0);
+    //}
 }
