@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Camera : MonoBehaviour
+public class Pivot : MonoBehaviour
 {
     GameObject player;
     public Vector3 cameraPos;
@@ -18,13 +18,20 @@ public class Camera : MonoBehaviour
     //public float rotSpeed = 200;
 
 
-    void Start() {
+    void Start()
+    {
         player = GameObject.FindWithTag("Player");
     }
 
-    void Update() {
+    void Update()
+    {
         playerPos = player.transform.position;
         //Lookat();
+
+    }
+
+    void FixedUpdate()
+    {
         Rotate();
     }
     //public void Lookat()
@@ -50,35 +57,13 @@ public class Camera : MonoBehaviour
     //    transform.position = cameraPos;
     //}
 
-    void Rotate() {
+    void Rotate()
+    {
         mouseHorizontal = Input.GetAxis("Mouse X");
         mouseVertical = Input.GetAxis("Mouse Y");
 
         transform.RotateAround(playerPos,
-                               new Vector3(0, mouseHorizontal*3, 0),
+                               new Vector3(0, mouseHorizontal * 3, 0),
                                angle);
     }
-
-    //void Mouses()
-    //{
-    //mouseHorizontal = Input.GetAxis("Mouse X");
-    //mouseVertical = Input.GetAxis("Mouse Y");
-    //camTransform.LookAt(playerTransform);
-
-    //mx += mouseHorizontal * rotSpeed * Time.deltaTime;
-    //my += mouseVertical * rotSpeed * Time.deltaTime;
-
-    //if (my >= 90)
-    //{
-    //    my = 90;
-    //}
-    //else if (my <= -90)
-    //
-    //    my = -90;
-    //}
-
-    //my = Mathf.Clamp(my, -90, 90);
-
-    //camTransform.eulerAngles = new Vector3(-my, mx, 0);
-    //}
 }
