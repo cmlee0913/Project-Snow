@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    GameObject player;
+    public GameObject player;
+    public GameObject player_p;
     public Vector3 cameraPos;
     public Vector3 playerPos;
     public float mouseHorizontal;
@@ -18,45 +19,37 @@ public class Camera : MonoBehaviour
     //public float rotSpeed = 200;
 
 
-    void Start() {
+    void Start()
+    {
         player = GameObject.FindWithTag("Player");
+        player_p = GameObject.FindWithTag("P");
     }
 
-    void Update() {
+    void Update()
+    {
         playerPos = player.transform.position;
-        //Lookat();
+        Lookat();
         Rotate();
     }
-    //public void Lookat()
-    //{
-    //    cameraPos = transform.position;
-    //    playerPos = player.transform.position;
+    public void Lookat()
+    {
+        cameraPos = transform.position;
+        playerPos = player.transform.position;
 
-    //    if (cameraPos.x != playerPos.x)
-    //    {
-    //        cameraPos.x = playerPos.x;
-    //    }
+        cameraPos = playerPos - (Vector3.forward * 3f) + (Vector3.up * 1.5f);
+    }
 
-    //    if (cameraPos.y - playerPos.y != 2.5)
-    //    {
-    //        cameraPos.y = playerPos.y + 1.5f;
-    //    }
-
-    //    if (cameraPos.z - playerPos.z != -3.2)
-    //    {
-    //        cameraPos.z = playerPos.z - 3.2f;
-    //    }
-
-    //    transform.position = cameraPos;
-    //}
-
-    void Rotate() {
+    void Rotate()
+    {
         mouseHorizontal = Input.GetAxis("Mouse X");
         mouseVertical = Input.GetAxis("Mouse Y");
 
-        transform.RotateAround(playerPos,
-                               new Vector3(0, mouseHorizontal*3, 0),
-                               angle);
+        if (Input.GetMouseButton(1))
+        {
+            transform.RotateAround(playerPos,
+                                  new Vector3(0, mouseHorizontal * 3, 0),
+                                  angle);
+        }
     }
 
     //void Mouses()

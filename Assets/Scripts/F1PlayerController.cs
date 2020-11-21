@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-    Rigidbody playerRigid;
+    public Rigidbody playerRigid;
+    public new GameObject camera;
     public GameObject pivot;
     Collision map;
     public float speed;
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour {
     public Vector3 rotate;
     public bool isJumping;
     public bool isDash;
+
 
     void Start() {
         Define();
@@ -34,7 +36,8 @@ public class PlayerController : MonoBehaviour {
 
     void Define() {
         playerRigid = GetComponent<Rigidbody>();
-        pivot = GameObject.FindWithTag("MainCamera");
+        camera = GameObject.FindWithTag("MainCamera");
+        pivot = GameObject.FindWithTag("P");
     }
 
     void Isjumping() {
@@ -78,12 +81,16 @@ public class PlayerController : MonoBehaviour {
             moveVertical = Input.GetAxis("Vertical");
 
             movement = new Vector3(moveHorizontal, 0, moveVertical);
-            Vector3 dir = pivot.transform.localRotation * movement;
+            Vector3 dir = pivot.transform.rotation * movement;
 
             playerRigid.velocity = dir * speed; 
-    } 
+    }
 
-    void Rotate() {
-        transform.localRotation = pivot.transform.localRotation;
+    void Rotate()
+    {
+            transform.localRotation = new Quaternion(0,
+                                                 camera.transform.localRotation.y,
+                                                 camera.transform.localRotation.z,
+                                                 camera.transform.localRotation.w);
     }
 }
