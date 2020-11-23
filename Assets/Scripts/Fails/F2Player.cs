@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class F2Player : MonoBehaviour
 {
+    public new GameObject camera;
     public GameObject player;
-    public GameObject mainCamera;
+    public GameObject TPScontroller;
+    public Rigidbody rigid;
     public Rigidbody playerRigid;
     public bool isJumping = false;
     public float jumpPower = 2000f;
@@ -13,7 +15,9 @@ public class Player : MonoBehaviour
     void Awake()
     {
         player = GameObject.FindWithTag("Player");
-        mainCamera = GameObject.FindWithTag("MainCamera");
+        camera = GameObject.FindWithTag("Camera");
+        TPScontroller = GameObject.FindWithTag("TPScontroller");
+        rigid = TPScontroller.GetComponent<Rigidbody>();
         playerRigid = player.GetComponent<Rigidbody>();
     }
 
@@ -36,9 +40,11 @@ public class Player : MonoBehaviour
 
     void Balance()
     {
-        if (player.transform.localEulerAngles.x == 0 || player.transform.localEulerAngles.z == 0 == false)
+        Quaternion playerRotation = player.transform.localRotation;
+
+        if ((playerRotation.eulerAngles.x == 0 || playerRotation.eulerAngles.z == 0) == false)
         {
-            player.transform.localEulerAngles = new Vector3(0, player.transform.localEulerAngles.y, 0);
+            playerRotation.eulerAngles = new Vector3(0, playerRotation.eulerAngles.y, 0);
         }
     }
 
@@ -59,6 +65,7 @@ public class Player : MonoBehaviour
 
         if (isJumping == false)
         {
+            rigid.velocity = new Vector3(horizontal, 0f, vertical) * speed;
             playerRigid.velocity = new Vector3(horizontal, 0f, vertical) * speed;
         }
     }
