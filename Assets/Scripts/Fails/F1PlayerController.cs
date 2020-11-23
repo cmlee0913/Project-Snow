@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class F1PlayerController : MonoBehaviour {
     public Rigidbody playerRigid;
     public new GameObject camera;
     public GameObject pivot;
