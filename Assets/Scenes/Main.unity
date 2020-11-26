@@ -200,11 +200,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
-  player: {fileID: 0}
-  cameraSpot: {fileID: 0}
-  mouseX: 0
-  mouseY: 0
-  x: 0
+  isMove: 0
+  isJumping: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
