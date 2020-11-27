@@ -6,11 +6,13 @@ public class Controller : MonoBehaviour
 {
     [SerializeField]
     new GameObject camera;
+    Camera mainCamera;
     GameObject player;
     GameObject cameraSpot;
     Rigidbody playerRigid;
     float mouseX;
     float mouseY;
+    float scroll;
     float x;
     float Horizontal;
     float Vertical;
@@ -25,13 +27,14 @@ public class Controller : MonoBehaviour
         camera = GameObject.FindWithTag("Camera");
         cameraSpot = GameObject.FindWithTag("CameraSpot");
         playerRigid = player.GetComponent<Rigidbody>();
+        mainCamera = camera.GetComponent<Camera>();
     }
 
     private void Update()
     {
         Balance();
         Camera();
-        //PlayerJump();
+        PlayerJump();
     }
 
     private void FixedUpdate()
@@ -43,6 +46,7 @@ public class Controller : MonoBehaviour
     {
         Quaternion playerRotation = player.transform.localRotation;
 
+        /* 플레이어 X, Z회전 값 소숫점 반올림 */
         if ((playerRotation.eulerAngles.x == 0 || playerRotation.eulerAngles.z == 0) == false)
         {
             playerRotation.eulerAngles = new Vector3(0, playerRotation.eulerAngles.y, 0);
@@ -51,30 +55,53 @@ public class Controller : MonoBehaviour
 
     private void Camera()
     {
-        mouseX = Input.GetAxis("Mouse X");
-        mouseY = Input.GetAxis("Mouse Y");
+        /* 변수 선언 */
+        mouseX = Input.GetAxis("Mouse X") * 3f;
+        mouseY = Input.GetAxis("Mouse Y") * 3f;
+        scroll = -Input.GetAxis("Mouse ScrollWheel") * 10f;
         Vector3 camAngle = cameraSpot.transform.rotation.eulerAngles;
         x = camAngle.x - mouseY; // 최대 카메라 각도 설정을 위한 변수
 
+        /* 마우스 휠로 카메라 줌 조절 */
+        if (mainCamera.fieldOfView <= 20f && scroll < 0f)
+        {
+            mainCamera.fieldOfView = 20f;
+        }
+        else if (mainCamera.fieldOfView >= 60f && scroll >0f)
+        {
+            mainCamera.fieldOfView = 60f;
+        }
+        else
+        {
+            mainCamera.fieldOfView += scroll;
+        }
+
+        /* 회전 각도 최대 범위 설정 */
         if (x < 180f)
         {
             x = Mathf.Clamp(x, -1f, 70f); // -1도의 이유는 수평 부근에서의 멈춤을 막기위해
         }
         else if (180f <= x)
         {
-            x = Mathf.Clamp(x, 335f, 361f); // 1도의 이유는 위와 같음
+            x = Mathf.Clamp(x, 355f, 361f); // 1도의 이유는 위와 같음
         }
 
-        cameraSpot.transform.rotation = Quaternion.Euler(x, camAngle.y + mouseX, camAngle.z);
+        /* 마우스 움직임에 따라 CamSpot 회전 값 변경 */
+        if (Input.GetMouseButton(1)) // 마우스 왼쪽버튼 누르면서 시점 이동
+        {
+            cameraSpot.transform.rotation = Quaternion.Euler(x, camAngle.y + mouseX, camAngle.z);
+        }
     }
 
     private void Move()
     {
+        /* 변수 선언 */
         Horizontal = Input.GetAxisRaw("Horizontal");
         Vertical = Input.GetAxisRaw("Vertical");
         speed = 5f;
 
-        if (Input.GetKey(KeyCode.LeftShift) == true) // 대쉬 유무 판별
+        /* 대쉬 유무 판별 */
+        if (Input.GetKey(KeyCode.LeftShift) == true)
         {
             speed = 10f;
         }
@@ -83,11 +110,13 @@ public class Controller : MonoBehaviour
             speed = 5f;
         }
 
-        if (Horizontal != 0 || Vertical != 0) // 방향키 입력 유무 판별
+        /* 방향키 입력 유무 판별 */
+        if (Horizontal != 0 || Vertical != 0)
         {
             isMove = true;
         }
 
+        /* 카메라 스팟의 전후방 좌우 방향을 기준 */
         Vector3 moveVertical = new Vector3(cameraSpot.transform.forward.x,
                                            0, // 이동 방향을 2차원적으로 고정 시키기 위해
                                            cameraSpot.transform.forward.z).normalized;
@@ -96,6 +125,7 @@ public class Controller : MonoBehaviour
                                              cameraSpot.transform.right.z).normalized;
         Vector3 move = moveVertical * Vertical + moveHorizontal * Horizontal;
 
+        /* 카메라 스팟의 전후방 좌우 방향으로 이동 */
         if (isJumping == false) // 점프 중이 아닐 때
         {
             if (isMove == true)
@@ -107,25 +137,19 @@ public class Controller : MonoBehaviour
         }
     }
 
-    //private void PlayerJump()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space) == true)
-    //    {
-    //        if (isJumping == false)
-    //        {
-    //            playerRigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-    //            player.transform.position = transform.position;
-    //            isJumping = true;
-    //        }
-    //    }
-    //}
-
-    //void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Map") == true)
-    //    {
-    //        isJumping = false;
-    //    }
-    //}
+    private void PlayerJump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) == true)
+        {
+            if (isJumping == false)
+            {
+                playerRigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+                transform.position = player.transform.position;
+                isJumping = true;
+            }
+        }
+    }
 }
 // Reference https://www.youtube.com/watch?v=P4qyRyQdySw&t=510s
+                                                               
+                                                               
