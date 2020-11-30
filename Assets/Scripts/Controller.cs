@@ -19,7 +19,7 @@ public class Controller : MonoBehaviour
     float speed;
     public bool isMove = false;
     public bool isJumping = false;
-    float jumpPower = 2000f;
+
 
     private void Start()
     {
@@ -34,7 +34,6 @@ public class Controller : MonoBehaviour
     {
         Balance();
         Camera();
-        PlayerJump();
     }
 
     private void FixedUpdate()
@@ -133,19 +132,6 @@ public class Controller : MonoBehaviour
                 player.transform.forward = move; // 플레이어의 시선 방향이 방향키 입력 방향과 일치하도록 회전
                 transform.position += move * Time.deltaTime * speed; // 키보드 입력 시 camSpot의 전방 또는 좌우으로 이동
                 isMove = false; // 시선 방향 고정
-            }
-        }
-    }
-
-    private void PlayerJump()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) == true)
-        {
-            if (isJumping == false)
-            {
-                playerRigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-                transform.position = player.transform.position;
-                isJumping = true;
             }
         }
     }
