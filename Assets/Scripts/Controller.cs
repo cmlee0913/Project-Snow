@@ -10,6 +10,7 @@ public class Controller : MonoBehaviour
     GameObject player;
     GameObject cameraSpot;
     Rigidbody playerRigid;
+    Vector3 controllerPos;
     float mouseX;
     float mouseY;
     float scroll;
@@ -28,12 +29,14 @@ public class Controller : MonoBehaviour
         cameraSpot = GameObject.FindWithTag("CameraSpot");
         playerRigid = player.GetComponent<Rigidbody>();
         mainCamera = camera.GetComponent<Camera>();
+        controllerPos = transform.position;
     }
 
     private void Update()
     {
         Balance();
         Camera();
+        controllerPos.y = player.transform.position.y;
     }
 
     private void FixedUpdate()
